@@ -1,3 +1,4 @@
+//Developing a harder version that can auto test.
 #include "HashTable.h"
 
 ostream & operator <<(ostream & os, const HashTable & theTable)
@@ -49,6 +50,8 @@ void HashTable::insert(int theKey)
 	int hValue = hashValue(theKey, j); //Hash Value for Readability
 
 	//while ((count < (capacity) && (table[hValue] != -1)) //linear probing
+	
+	//Quadratic function.
 	while ((j < (capacity + 1) / 2) && (table[hValue] != -1)
 		&& (table[hValue] != -2)) //quadratic function
 	{
@@ -66,7 +69,8 @@ void HashTable::insert(int theKey)
 //Search for a specific item in the hash table. Return True if found.
 bool HashTable::search(int item)
 {
-	bool flag = true;
+	
+	bool flag = true;	//Need a flag to know if we are finished.
 	int j= 0;
 	int hValue = hashValue(item, j); //j ill work on it
 	//while ((count < (capacity) && (table[theHashIdx] != item) && (table[theHashIdx] != -1)) //linear probing
@@ -76,6 +80,7 @@ bool HashTable::search(int item)
 		hValue = hashValue(item, ++j); //value changed
 	}
 	//Created flag variable for readability
+	//This flag determines if we were finished. Notice it ends at (capacity + 1)/2
 	if ((table[hValue] == -1) || ((capacity + 1) / 2 == j))
 		flag = false;
 	return flag;
@@ -102,6 +107,7 @@ int & HashTable::operator[](int i)
 
 }
 
+//The has table needs and operator overloader for = for readability.
 HashTable& HashTable::operator=(const HashTable & otherTable)
 {
 	if (&otherTable != this)
@@ -135,7 +141,7 @@ HashTable::~HashTable()
 //Private hashValue Key
 int HashTable::hashValue(int key, int j) const
 {
-	//return ((key + (j * STEPSIZE)) % CAPACITY);
+	//return ((key + (j * STEPSIZE)) % CAPACITY); //Again this is for linear probing.
 	return (((2 * key + 5) + (j*j)) % capacity); //Quadratic
 }
 
@@ -143,6 +149,7 @@ int HashTable::hashValue(int key, int j) const
 //An overloaded way to get directly to linear probing
 int HashTable::hashValue(int theKey) const
 {
+	//This gets me the hashValue if the function. ONLY for LINEAR PROBING.
 	return ((theKey) % capacity);
 }
 
@@ -158,8 +165,9 @@ void HashTable::deleteKey(int key)
 			cout << "Key Not Found." << endl;
 		else
 		{
-			table[idx] = -2;	//Done in order to skip over for deletion.
-			numOfElements--;
+			table[idx] = -2;	//Done in order to skip over for deletion. 
+						//This -2 is done in order to signal to the compiler that there was something here.
+			numOfElements--;	//Decrement elements.
 		}
 	}
 }
